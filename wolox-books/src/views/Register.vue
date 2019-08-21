@@ -2,7 +2,7 @@
   div.container
       div.containerRegister
         img.logo(alt="Wolox logo" src="../assets/logo.png")
-        form.containerFields(v-on:click='onSubmit')
+        form(v-on:click='onSubmit')
           .containerField(v-for='(field, name) in fields')
             label.labelField {{field.label}}
             input.inputField(v-bind:type='field.type' v-model='field.value')
@@ -48,10 +48,6 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
-.containerFields {
-  margin-bottom: 20px;
-  }
 
 .containerField {
   margin-bottom: 20px;
