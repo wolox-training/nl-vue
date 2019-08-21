@@ -1,14 +1,14 @@
 <template lang='pug'>
   div.container
-      div.containerRegister
+      div.container-register
         img.logo(alt="Wolox logo" src="../assets/logo.png")
-        form(v-on:click='onSubmit')
-          .containerField(v-for='(field, name) in fields')
-            label.labelField {{field.label}}
-            input.inputField(v-bind:type='field.type' v-model='field.value')
-          button.buttonSignUp(type='button') Sign Up
+        form(v-on:click='handleSignUp')
+          .container-field(v-for='(field, name) in fields')
+            label.label(:for='name') {{field.label}}
+            input.input(v-bind:type='field.type' v-model='field.value' :id='name')
+          button.button-sign-up(type='button') Sign Up
         hr.separator
-        button.buttonLogin(type='submit') Login
+        button.button-login(type='submit') Login
 </template>
 <script>
 
@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
+    handleSignUp () {
       console.log(JSON.parse(JSON.stringify(this.fields)));
     }
   }
@@ -34,7 +34,7 @@ export default {
 
 <style lang="scss">
 @import '../scss/variables/colors.scss';
-.containerRegister {
+.container-register {
   width: 250px;
   padding: 20px;
   margin-top: 30px;
@@ -49,7 +49,7 @@ export default {
   flex-direction: column;
 }
 
-.containerField {
+.container-field {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -57,34 +57,34 @@ export default {
   width: 100%;
 }
 
-.inputField {
+.input {
   width: 100%;
   border-radius: 10px;
   border: none;
   height: 30px;
 }
 
-.labelField {
+.label {
   margin: 0px 10px; 
   font-weight: 600;
 }
 
-%buttonField {
+%button-basic {
   width: 100%;
   border-radius: 10px;
   height: 40px;
   font-size: 14px;
 }
 
-.buttonLogin {
-  @extend %buttonField;
+.button-login {
+  @extend %button-basic;
   border: solid 1px $green;
   color: $green;
   background-color: transparent;
 }
 
-.buttonSignUp {
-  @extend %buttonField;
+.button-sign-up {
+  @extend %button-basic;
   background-color: $green;
   color: $white; 
 }
