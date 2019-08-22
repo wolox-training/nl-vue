@@ -1,13 +1,14 @@
 <template lang='pug'>
-  div.container
-      div.container-register
-        img.logo(alt="Wolox logo" src="../assets/logo.png")
-        form(v-on:click='handleSignUp')
-          .container-field(v-for='(field, name) in fields')
-            label.label(:for='name') {{field.label}}
-            input.input(v-bind:type='field.type' v-model='field.value' :id='name')
+  .container
+      .container-register
+        img.logo(alt='Wolox logo' src='../assets/logo.png')
+        form(@click='onSubmit')
+          .container-field(v-for='(field, name) in fields' :key='name')
+            label.label(:for='name')
+              | {{field.label}}
+            input.input(:type='field.type' v-model='field.value' :id='name')
           button.button-sign-up(type='button') Sign Up
-        hr.separator
+        .separator
         button.button-login(type='submit') Login
 </template>
 <script>
@@ -25,15 +26,16 @@ export default {
     }
   },
   methods: {
-    handleSignUp () {
+    onSubmit() {
       console.log(JSON.parse(JSON.stringify(this.fields)));
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../scss/variables/colors.scss';
+
 .container-register {
   width: 250px;
   padding: 20px;
