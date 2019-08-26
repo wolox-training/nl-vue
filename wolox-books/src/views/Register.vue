@@ -6,35 +6,93 @@
           .container-field(v-for='(field, name) in fields' :key='name')
             label.label(:for='name')
               | {{field.label}}
-            input.input(:type='field.type' v-model='field.value' :id='name')
+            input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
+            .error(v-if='field.validation.submitError') {{ field.validation.error }}
           button.button-sign-up(type='button') Sign Up
         .separator
         button.button-login(type='submit') Login
 </template>
 <script>
 
+import { email, numeric, helpers } from 'vuelidate/lib/validators'
+import { validationPassword } from '../validations/inputValidations';
+import { errorPass, errorEmail } from '../validations/constants';
+
 export default {
   name: 'Register',
   data () {
     return {
       fields: {
-        firstName: { label: 'First name', value: null },
-        lastName: { label: 'Last name', value: null },
-        email: { label: 'Email', value: null },
-        password: { label: 'Password', value: null, type: 'password' }
+        firstName: { 
+          label: 'First name',
+          value: null ,
+          validation: {}
+        },
+        lastName: {
+          label: 'Last name',
+          value: null,
+          validation: {}
+        },
+        email: { 
+          label: 'Email',
+          value: null,
+          validation: {
+            submitError: false,
+            error: errorEmail
+          }
+        },
+        password: {
+          label: 'Password',
+          value: null,
+          type: 'password', 
+          validation: {
+            submitError: false,
+            error: errorPass
+          }
+        }
+      },
+      errors: []
+    }
+  },
+  validations: {
+    fields: {
+      email: {
+        value: { email }
+      },
+      password: {
+        value: { validationPassword }
       }
     }
   },
   methods: {
+    validationsFields() {
+      this.fields.email.validation.submitError = this.$v.fields.email.$invalid
+      this.fields.password.validation.submitError = this.$v.fields.password.$invalid
+    },
     onSubmit() {
-      console.log(JSON.parse(JSON.stringify(this.fields)));
+      this.$v.$touch()
+        this.validationsFields()
+        if (!this.$v.fields.$invalid) {
+          this.errors = []
+          console.log(JSON.parse(JSON.stringify(this.fields)))
+        }
     }
   }
 }
-</script>
+</script> 
 
 <style lang="scss" scoped>
 @import '../scss/variables/colors.scss';
+
+.error {
+  color: $red;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+  .error-input {
+    border: solid 1.5px $red !important;
+  }
 
 .container-register {
   width: 250px;
@@ -62,7 +120,7 @@ export default {
 .input {
   width: 100%;
   border-radius: 10px;
-  border: none;
+  border: transparent;
   height: 30px;
 }
 
@@ -88,7 +146,8 @@ export default {
 .button-sign-up {
   @extend %button-basic;
   background-color: $green;
-  color: $white; 
+  color: $white;
+  margin-bottom: 10px;
 }
 
 .separator {
