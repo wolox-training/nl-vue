@@ -2,15 +2,14 @@
   .container
       .container-register
         img.logo(alt='Wolox logo' src='../assets/logo.png')
-        form(@click='onSubmit')
+        form(@submit.prevent='onSubmit').container-form
           .container-field(v-for='(field, name) in fields' :key='name')
             label.label(:for='name')
               | {{field.label}}
             input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
             .error(v-if='field.validation.submitError') {{ field.validation.error }}
-          button.button-sign-up(type='button') Sign Up
-        .separator
-        button.button-login(type='submit') Login
+          button.button-sign-up(:type='button') Sign Up
+        button.button-login(:type='submit') Login
 </template>
 <script>
 
@@ -90,9 +89,9 @@ export default {
   font-weight: 600;
 }
 
-  .error-input {
-    border: solid 1.5px $red !important;
-  }
+.error-input {
+  border: solid 2px $red !important;
+}
 
 .container-register {
   width: 250px;
@@ -122,6 +121,7 @@ export default {
   border-radius: 10px;
   border: transparent;
   height: 30px;
+  padding: 5px;
 }
 
 .label {
@@ -150,10 +150,10 @@ export default {
   margin-bottom: 10px;
 }
 
-.separator {
-  border: $dark-grey solid 1px;
-  width: 100%;
-  margin: 18px 0px;
+.container-form {
+  border-bottom: $dark-grey solid 1px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .logo {
