@@ -2,14 +2,13 @@
   .container
       .container-register
         img.logo(alt='Wolox logo' src='../assets/logo.png')
-        form(@click='onSubmit')
+        form(@submit.prevent='onSubmit').container-form
           .container-field(v-for='(field, name) in fields' :key='name')
             label.label(:for='name')
               | {{field.label}}
             input.input(:type='field.type' v-model='field.value' :id='name')
-          button.button-sign-up(type='button') Sign Up
-        .separator
-        button.button-login(type='submit') Login
+          button.button-sign-up(:type='button') Sign Up
+        button.button-login(:type='submit') Login
 </template>
 <script>
 
@@ -91,10 +90,10 @@ export default {
   color: $white; 
 }
 
-.separator {
-  border: $dark-grey solid 1px;
-  width: 100%;
-  margin: 18px 0px;
+.container-form {
+  border-bottom: $dark-grey solid 1px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .logo {
