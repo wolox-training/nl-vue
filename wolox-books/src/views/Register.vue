@@ -9,13 +9,14 @@
             input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
             .error(v-if='field.validation.submitError') {{ field.validation.error }}
           button.button-sign-up(:type='button') Sign Up
-        button.button-login(:type='submit') Login
+        button.button-login(:type='submit') <router-link to="/login" class="login">Login</router-link>
 </template>
 <script>
 
 import { email, numeric, helpers } from 'vuelidate/lib/validators'
-import { validationPassword } from '../validations/inputValidations';
-import { errorPass, errorEmail } from '../validations/constants';
+import { validationPassword } from '../validations/inputValidations'
+import { errorPass, errorEmail } from '../validations/constants'
+import { createUser } from '../services/UserServices'
 
 export default {
   name: 'Register',
@@ -68,13 +69,24 @@ export default {
       this.fields.email.validation.submitError = this.$v.fields.email.$invalid
       this.fields.password.validation.submitError = this.$v.fields.password.$invalid
     },
+    formatUser(fields) {
+      return { 
+        email: fields.email.value,
+        password: fields.password.value,
+        password_confirmation: fields.password.value,
+        first_name: fields.firstName.value,
+        last_name: fields.lastName.value,
+        locale: 'en'
+      }
+    },
     onSubmit() {
       this.$v.$touch()
         this.validationsFields()
         if (!this.$v.fields.$invalid) {
           this.errors = []
-          console.log(JSON.parse(JSON.stringify(this.fields)))
-        }
+          const user = this.formatUser(this.fields)
+          createUser(user)
+      }
     }
   }
 }
@@ -82,6 +94,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables/colors.scss';
+
+.login {
+  color: $green;
+}
 
 .error {
   color: $red;
