@@ -11,6 +11,7 @@
           button.button-sign-up(:type='button') Sign Up
         button.button-login(:type='submit') <router-link to="/login" class="login">Login</router-link>
 </template>
+
 <script>
 
 import { email, numeric, helpers } from 'vuelidate/lib/validators'
@@ -97,6 +98,7 @@ export default {
 
 .login {
   color: $green;
+  text-decoration: none;
 }
 
 .error {
