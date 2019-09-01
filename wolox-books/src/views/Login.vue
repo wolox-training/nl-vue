@@ -14,7 +14,7 @@
 
 <script>
 
-import { required } from 'vuelidate/lib/validators'
+import { required, email } from 'vuelidate/lib/validators'
 import { getAuthentication } from '../services/UserServices'
 
 export default {
@@ -27,7 +27,7 @@ export default {
           value: null,
           validation: {
             submitError: false,
-            error: 'Campo requerido'
+            error: 'Campo requerido. Formato invalido.'
           }
         },
         password: {
@@ -46,7 +46,7 @@ export default {
   validations: {
     fields: {
       email: {
-        value: { required }
+        value: { required, email }
       },
       password: {
         value: { required }
