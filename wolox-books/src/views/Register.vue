@@ -1,17 +1,18 @@
 <template lang='pug'>
   .container
-      .container-register
-        img.logo(alt='Wolox logo' src='../assets/logo.png')
-        form(@submit.prevent='onSubmit').container-form
-          .container-field(v-for='(field, name) in fields' :key='name')
-            label.label(:for='name')
-              | {{field.label}}
-            input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
-            .error(v-if='field.validation.submitError') {{ field.validation.error }}
-          button.button-sign-up(type='button')
-            | Sign Up
-        button.button-login(type='submit')
-          | Login
+    .container-register
+      img.logo(alt='Wolox logo' src='../assets/logo.png')
+      form(@submit.prevent='onSubmit').container-form
+        .container-field(v-for='(field, name) in fields' :key='name')
+          label.label(:for='name')
+            | {{field.label}}
+          input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': getFieldValidationByName(field.name)}")
+          .error(v-if='getFieldValidationByName(field.name)')
+            |  {{ field.validation.error }}
+        button.button-sign-up(:type='button')
+          | Sign Up
+      button.button-login(:type='submit')
+        | Login
 </template>
 <script>
 
@@ -24,35 +25,36 @@ export default {
   data () {
     return {
       fields: {
-        firstName: { 
+        firstName: {
+          name: 'first_name',
           label: 'First name',
           value: null ,
           validation: {}
         },
         lastName: {
+          name: 'last_name',
           label: 'Last name',
           value: null,
           validation: {}
         },
-        email: { 
+        email: {
+          name: 'email',
           label: 'Email',
           value: null,
           validation: {
-            submitError: false,
             error: errorEmail
           }
         },
         password: {
+          name: 'password',
           label: 'Password',
           value: null,
           type: 'password', 
           validation: {
-            submitError: false,
             error: errorPass
           }
         }
-      },
-      errors: []
+      }
     }
   },
   validations: {
@@ -66,17 +68,14 @@ export default {
     }
   },
   methods: {
-    validationsFields() {
-      this.fields.email.validation.submitError = this.$v.fields.email.$invalid
-      this.fields.password.validation.submitError = this.$v.fields.password.$invalid
-    },
     onSubmit() {
       this.$v.$touch()
-        this.validationsFields()
-        if (!this.$v.fields.$invalid) {
-          this.errors = []
-          console.log(JSON.parse(JSON.stringify(this.fields)))
-        }
+      if (!this.$v.fields.$invalid) {
+        console.log(JSON.parse(JSON.stringify(this.fields)))
+      }
+    },
+    getFieldValidationByName(name) {
+      return this.$v.fields[name] && this.$v.fields[name].$invalid
     }
   }
 }
@@ -89,6 +88,7 @@ export default {
   color: $red;
   font-size: 13px;
   font-weight: 600;
+  margin: 5px;
 }
 
 .error-input {
