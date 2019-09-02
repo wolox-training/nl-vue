@@ -10,7 +10,7 @@ export const createUser = async user => {
   throw response
 }
 
-export const authentication = async session => {
+export const getAuthentication = async session => {
   const response = await api.post('/users/sessions', { session })
   if (response.ok) {
     router.push('/home')
