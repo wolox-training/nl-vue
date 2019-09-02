@@ -7,10 +7,13 @@
             label.label(:for='name')
               | {{field.label}}
             input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
-            .error(v-if='field.validation.submitError') {{ field.validation.error }}
-          button.button-sign-up(type='button')
+            .error(v-if="field.label === 'Email' && $v.fields.email.$invalid")
+              |  {{ field.validation.error }}
+            .error(v-if="field.label === 'Password' && $v.fields.password.$invalid")
+              |  {{ field.validation.error }}
+          button.button-sign-up(:type='button')
             | Sign Up
-        button.button-login(type='submit')
+        button.button-login(:type='submit')
           | Login
 </template>
 <script>
@@ -38,7 +41,6 @@ export default {
           label: 'Email',
           value: null,
           validation: {
-            submitError: false,
             error: errorEmail
           }
         },
@@ -47,7 +49,6 @@ export default {
           value: null,
           type: 'password', 
           validation: {
-            submitError: false,
             error: errorPass
           }
         }
@@ -66,15 +67,9 @@ export default {
     }
   },
   methods: {
-    validationsFields() {
-      this.fields.email.validation.submitError = this.$v.fields.email.$invalid
-      this.fields.password.validation.submitError = this.$v.fields.password.$invalid
-    },
     onSubmit() {
       this.$v.$touch()
-        this.validationsFields()
         if (!this.$v.fields.$invalid) {
-          this.errors = []
           console.log(JSON.parse(JSON.stringify(this.fields)))
         }
     }
@@ -89,6 +84,7 @@ export default {
   color: $red;
   font-size: 13px;
   font-weight: 600;
+  margin: 5px;
 }
 
 .error-input {
