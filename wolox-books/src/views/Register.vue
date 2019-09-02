@@ -8,8 +8,10 @@
               | {{field.label}}
             input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
             .error(v-if='field.validation.submitError') {{ field.validation.error }}
-          button.button-sign-up(:type='button') Sign Up
-        button.button-login(:type='submit') Login
+          button.button-sign-up(type='button')
+            | Sign Up
+        button.button-login(type='submit')
+          | Login
 </template>
 <script>
 
