@@ -7,8 +7,10 @@
             label.label(:for='name')
               | {{field.label}}
             input.input(:type='field.type' v-model='field.value' :id='name')
-          button.button-sign-up(:type='button') Sign Up
-        button.button-login(:type='submit') Login
+          button.button-sign-up(type='button')
+            | Sign Up
+        button.button-login(type='submit')
+          | Login
 </template>
 <script>
 
