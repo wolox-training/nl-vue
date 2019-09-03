@@ -6,9 +6,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/register',
-      name: 'register',
-      component: () => import(/* webpackChunkName: "about" */ './views/Register.vue')
+      path: '/sign-up',
+      name: 'sign-up',
+      component: () => import(/* webpackChunkName: "sign-up" */ './views/Register.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
 
     }
   ]

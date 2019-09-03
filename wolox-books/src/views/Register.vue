@@ -12,13 +12,15 @@
         button.button-sign-up(:type='button')
           | Sign Up
       button.button-login(:type='submit')
-        | Login
+        routerLink.login(to='/login')
+          | Login
 </template>
 <script>
 
 import { email, numeric, helpers } from 'vuelidate/lib/validators'
-import { validationPassword } from '../validations/inputValidations';
-import { errorPass, errorEmail } from '../validations/constants';
+import { validationPassword } from '../validations/inputValidations'
+import { errorPass, errorEmail } from '../validations/constants'
+import { createUser } from '../services/UserServices'
 
 export default {
   name: 'Register',
@@ -68,10 +70,21 @@ export default {
     }
   },
   methods: {
+    formatUser(fields) {
+      return { 
+        [fields.email.name]: fields.email.value,
+        [fields.password.name]: fields.password.value,
+        password_confirmation: fields.password.value,
+        [fields.firstName.name]: fields.firstName.value,
+        [fields.lastName.name]: fields.lastName.value,
+        locale: 'en'
+      }
+    },
     onSubmit() {
       this.$v.$touch()
       if (!this.$v.fields.$invalid) {
-        console.log(JSON.parse(JSON.stringify(this.fields)))
+        const user = this.formatUser(this.fields)
+        createUser(user)
       }
     },
     getFieldValidationByName(name) {
@@ -83,6 +96,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables/colors.scss';
+
+.login {
+  color: $green;
+}
 
 .error {
   color: $red;
