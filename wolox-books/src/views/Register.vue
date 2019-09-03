@@ -2,7 +2,7 @@
   .container
     .container-register
       img.logo(alt='Wolox logo' src='../assets/logo.png')
-      form(@submit.prevent='onSubmit').container-form
+      form.container-form(@submit.prevent='onSubmit')
         .container-field(v-for='(field, name) in fields' :key='name')
           label.label(:for='name')
             | {{field.label}}
