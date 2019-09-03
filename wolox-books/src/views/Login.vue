@@ -1,11 +1,14 @@
 <template lang="pug">
-  .span Login
-    .br
-    <router-link to="/sign-up" class="login">Register</router-link>
+  .span
+    | Login
+    routerLink(to="/sign-up")
+      | Register
 </template>
 
 <script>
+
 export default {
   name: 'Login'
 }
+
 </script>

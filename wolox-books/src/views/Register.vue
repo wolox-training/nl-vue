@@ -2,14 +2,16 @@
   .container
       .container-register
         img.logo(alt='Wolox logo' src='../assets/logo.png')
-        form(@submit.prevent='onSubmit').container-form
+        form.container-form(@submit.prevent='onSubmit')
           .container-field(v-for='(field, name) in fields' :key='name')
             label.label(:for='name')
               | {{field.label}}
-            input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
-            .error(v-if='field.validation.submitError') {{ field.validation.error }}
-          button.button-sign-up(:type='button') Sign Up
-        button.button-login(:type='submit') <router-link to="/login" class="login">Login</router-link>
+            input.input(:type='field.type' v-model='field.value' :id='name')
+          button.button-sign-up(:type='button')
+            | Sign Up
+        button.button-login(:type='submit')
+          routerLink.login(to='/login')
+            | Login
 </template>
 <script>
 
