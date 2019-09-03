@@ -1,21 +1,19 @@
 <template lang='pug'>
   .container
-      .container-register
-        img.logo(alt='Wolox logo' src='../assets/logo.png')
-        form.container-form(@submit.prevent='onSubmit')
-          .container-field(v-for='(field, name) in fields' :key='name')
-            label.label(:for='name')
-              | {{field.label}}
-            input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': field.validation.submitError}")
-            .error(v-if="field.label === 'Email' && $v.fields.email.$invalid")
-              |  {{ field.validation.error }}
-            .error(v-if="field.label === 'Password' && $v.fields.password.$invalid")
-              |  {{ field.validation.error }}
-          button.button-sign-up(:type='button')
-            | Sign Up
-        button.button-login(:type='submit')
-          routerLink.login(to='/login')
-            | Login
+    .container-register
+      img.logo(alt='Wolox logo' src='../assets/logo.png')
+      form.container-form(@submit.prevent='onSubmit')
+        .container-field(v-for='(field, name) in fields' :key='name')
+          label.label(:for='name')
+            | {{field.label}}
+          input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': getFieldValidationByName(field.name)}")
+          .error(v-if='getFieldValidationByName(field.name)')
+            |  {{ field.validation.error }}
+        button.button-sign-up(:type='button')
+          | Sign Up
+      button.button-login(:type='submit')
+        routerLink.login(to='/login')
+          | Login
 </template>
 <script>
 
@@ -29,17 +27,20 @@ export default {
   data () {
     return {
       fields: {
-        firstName: { 
+        firstName: {
+          name: 'first_name',
           label: 'First name',
           value: null ,
           validation: {}
         },
         lastName: {
+          name: 'last_name',
           label: 'Last name',
           value: null,
           validation: {}
         },
-        email: { 
+        email: {
+          name: 'email',
           label: 'Email',
           value: null,
           validation: {
@@ -47,6 +48,7 @@ export default {
           }
         },
         password: {
+          name: 'password',
           label: 'Password',
           value: null,
           type: 'password', 
@@ -54,8 +56,7 @@ export default {
             error: errorPass
           }
         }
-      },
-      errors: []
+      }
     }
   },
   validations: {
@@ -71,21 +72,23 @@ export default {
   methods: {
     formatUser(fields) {
       return { 
-        email: fields.email.value,
-        password: fields.password.value,
+        [fields.email.name]: fields.email.value,
+        [fields.password.name]: fields.password.value,
         password_confirmation: fields.password.value,
-        first_name: fields.firstName.value,
-        last_name: fields.lastName.value,
+        [fields.firstName.name]: fields.firstName.value,
+        [fields.lastName.name]: fields.lastName.value,
         locale: 'en'
       }
     },
     onSubmit() {
       this.$v.$touch()
-        if (!this.$v.fields.$invalid) {
-          this.errors = []
-          const user = this.formatUser(this.fields)
-          createUser(user)
+      if (!this.$v.fields.$invalid) {
+        const user = this.formatUser(this.fields)
+        createUser(user)
       }
+    },
+    getFieldValidationByName(name) {
+      return this.$v.fields[name] && this.$v.fields[name].$invalid
     }
   }
 }
