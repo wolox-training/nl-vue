@@ -1,41 +1,99 @@
 <template lang='pug'>
   .container
-      .container-register
-        img.logo(alt='Wolox logo' src='../assets/logo.png')
-        form.container-form(@submit.prevent='onSubmit')
-          .container-field(v-for='(field, name) in fields' :key='name')
-            label.label(:for='name')
-              | {{field.label}}
-            input.input(:type='field.type' v-model='field.value' :id='name')
-          button.button-sign-up(:type='button')
-            | Sign Up
-        button.button-login(:type='submit')
-          | Login
+    .container-register
+      img.logo(alt='Wolox logo' src='../assets/logo.png')
+      form.container-form(@submit.prevent='onSubmit')
+        .container-field(v-for='(field, name) in fields' :key='name')
+          label.label(:for='name')
+            | {{field.label}}
+          input.input(:type='field.type' v-model='field.value' :id='name' :class="{'error-input': getFieldValidationByName(field.name)}")
+          .error(v-if='getFieldValidationByName(field.name)')
+            |  {{ field.validation.error }}
+        button.button-sign-up(:type='button')
+          | Sign Up
+      button.button-login(:type='submit')
+        | Login
 </template>
 <script>
+
+import { email, numeric, helpers } from 'vuelidate/lib/validators'
+import { validationPassword } from '../validations/inputValidations';
+import { errorPass, errorEmail } from '../validations/constants';
 
 export default {
   name: 'Register',
   data () {
     return {
       fields: {
-        firstName: { label: 'First name', value: null },
-        lastName: { label: 'Last name', value: null },
-        email: { label: 'Email', value: null },
-        password: { label: 'Password', value: null, type: 'password' }
+        firstName: {
+          name: 'first_name',
+          label: 'First name',
+          value: null ,
+          validation: {}
+        },
+        lastName: {
+          name: 'last_name',
+          label: 'Last name',
+          value: null,
+          validation: {}
+        },
+        email: {
+          name: 'email',
+          label: 'Email',
+          value: null,
+          validation: {
+            error: errorEmail
+          }
+        },
+        password: {
+          name: 'password',
+          label: 'Password',
+          value: null,
+          type: 'password', 
+          validation: {
+            error: errorPass
+          }
+        }
+      }
+    }
+  },
+  validations: {
+    fields: {
+      email: {
+        value: { email }
+      },
+      password: {
+        value: { validationPassword }
       }
     }
   },
   methods: {
     onSubmit() {
-      console.log(JSON.parse(JSON.stringify(this.fields)));
+      this.$v.$touch()
+      if (!this.$v.fields.$invalid) {
+        console.log(JSON.parse(JSON.stringify(this.fields)))
+      }
+    },
+    getFieldValidationByName(name) {
+      return this.$v.fields[name] && this.$v.fields[name].$invalid
     }
   }
 }
-</script>
+</script> 
 
 <style lang="scss" scoped>
 @import '../scss/variables/colors.scss';
+
+.error {
+  color: $red;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 5px;
+}
+
+.error-input {
+  border: solid 2px $red !important;
+}
 
 .container-register {
   width: 250px;
@@ -63,8 +121,9 @@ export default {
 .input {
   width: 100%;
   border-radius: 10px;
-  border: none;
+  border: transparent;
   height: 30px;
+  padding: 5px;
 }
 
 .label {
@@ -89,7 +148,8 @@ export default {
 .button-sign-up {
   @extend %button-basic;
   background-color: $green;
-  color: $white; 
+  color: $white;
+  margin-bottom: 10px;
 }
 
 .container-form {
