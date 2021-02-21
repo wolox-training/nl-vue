@@ -1,0 +1,104 @@
+<template lang='pug'>
+  .container
+      .container-register
+        img.logo(alt='Wolox logo' src='../assets/logo.png')
+        form.container-form(@submit.prevent='onSubmit')
+          .container-field(v-for='(field, name) in fields' :key='name')
+            label.label(:for='name')
+              | {{field.label}}
+            input.input(:type='field.type' v-model='field.value' :id='name')
+          button.button-sign-up(:type='button')
+            | Sign Up
+        button.button-login(:type='submit')
+          | Login
+</template>
+<script>
+
+export default {
+  name: 'Register',
+  data () {
+    return {
+      fields: {
+        firstName: { label: 'First name', value: null },
+        lastName: { label: 'Last name', value: null },
+        email: { label: 'Email', value: null },
+        password: { label: 'Password', value: null, type: 'password' }
+      }
+    }
+  },
+  methods: {
+    onSubmit() {
+      console.log(JSON.parse(JSON.stringify(this.fields)));
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../scss/variables/colors.scss';
+
+.container-register {
+  width: 250px;
+  padding: 20px;
+  margin-top: 30px;
+  background-color: $grey;
+  border-top: solid 5px $blue;
+}
+
+.container {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-field {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  height: 30px;
+}
+
+.label {
+  margin: 0px 10px; 
+  font-weight: 600;
+}
+
+%button-basic {
+  width: 100%;
+  border-radius: 10px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.button-login {
+  @extend %button-basic;
+  border: solid 1px $green;
+  color: $green;
+  background-color: transparent;
+}
+
+.button-sign-up {
+  @extend %button-basic;
+  background-color: $green;
+  color: $white; 
+}
+
+.container-form {
+  border-bottom: $dark-grey solid 1px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 250px;
+}
+</style>
